@@ -1,0 +1,1 @@
+# SilentSpeak core package

@@ -25,3 +25,14 @@ logs/
 # IDE
 .vscode/
 .idea/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
