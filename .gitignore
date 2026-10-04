@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models
+*.pth
+*.pt
+*.ckpt
+
+# Datasets
+data/
+datasets/
+
+# Outputs
+outputs/
+results/
+logs/
+
+# IDE
+.vscode/
+.idea/
