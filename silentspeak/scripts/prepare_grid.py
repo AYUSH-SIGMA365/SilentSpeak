@@ -87,21 +87,25 @@ def prepare_grid(subset_limit=None):
         if not (speaker.startswith("S") and speaker[1:].isdigit()):
             speaker = vid_path.parent.parent.name.upper()
             
+        # We only want S1 and S10 for our split
+        if speaker not in ["S1", "S10"]:
+            continue
+            
         transcript = get_grid_transcript(vid_path, base_data_dir)
         if transcript:
             valid_pairs.append((vid_path, transcript, speaker))
 
-    print(f"Total valid pairs found: {len(valid_pairs)}")
-    
     # Sort pairs to ensure deterministic splitting
     valid_pairs.sort(key=lambda x: str(x[0]))
-    
-    # 2. Split logic (Train: S1, Val/Test: S10)
-    splits = {"train": [], "val": [], "test": []}
     
     # Separate by speaker
     s1_pairs = [p for p in valid_pairs if p[2] == "S1"]
     s10_pairs = [p for p in valid_pairs if p[2] == "S10"]
+    
+    print(f"Discovered {len(s1_pairs)} S1 videos and {len(s10_pairs)} S10 videos with transcripts.")
+    
+    # 2. Split logic (Train: S1, Val/Test: S10)
+    splits = {"train": [], "val": [], "test": []}
     
     if subset_limit:
         print(f"Limiting processing to {subset_limit} videos per speaker for testing.")
@@ -114,6 +118,9 @@ def prepare_grid(subset_limit=None):
         s10_pairs = s10_pairs[:281]
         splits["val"] = s10_pairs[:140]
         splits["test"] = s10_pairs[140:]
+
+    total_to_process = len(splits["train"]) + len(splits["val"]) + len(splits["test"])
+    print(f"Total videos selected for split: {total_to_process} (Train: {len(splits['train'])}, Val: {len(splits['val'])}, Test: {len(splits['test'])})")
 
     # 3. Process each split
     for split_name, pairs in splits.items():
